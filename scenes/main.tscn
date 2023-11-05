@@ -1,16 +1,55 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmw5ho0rhkoe5"]
+[gd_scene load_steps=9 format=3 uid="uid://cmw5ho0rhkoe5"]
 
 [ext_resource type="PackedScene" uid="uid://dyqievi3n2a5x" path="res://scenes/billiard_table.tscn" id="1_av5cg"]
 [ext_resource type="PackedScene" uid="uid://chb8iwsf5qhuk" path="res://scenes/ball.tscn" id="2_1oxx4"]
-[ext_resource type="Texture2D" uid="uid://byxxs3ohmnwwb" path="res://assets/textures/16073.jpg" id="3_j2ck1"]
+[ext_resource type="Script" path="res://scripts/overhead_cam.gd" id="2_hma03"]
 [ext_resource type="Script" path="res://scripts/play_system.gd" id="4_vcjpw"]
+[ext_resource type="ArrayMesh" uid="uid://qydps34by717" path="res://assets/cue_stick.res" id="5_7r1sn"]
+[ext_resource type="Script" path="res://scripts/ball_rack.gd" id="7_m6m0y"]
+
+[sub_resource type="Animation" id="Animation_k6km8"]
+resource_name = "shoot_stick"
+length = 0.18
+step = 0.01
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.18),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_strike_ball"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AimContainer/CueStickContainer/CueStick:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.18),
+"transitions": PackedFloat32Array(1),
+"update": 2,
+"values": [Vector3(0, 0, 0.75)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k6sl2"]
+_data = {
+"shoot_stick": SubResource("Animation_k6km8")
+}
 
 [node name="Main" type="Node3D"]
 
 [node name="Billiard Table" parent="." instance=ExtResource("1_av5cg")]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="OverheadCam" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.341627, 0.939836, 0, -0.939836, 0.341627, 0, 1.03972, 0.497287)
+script = ExtResource("2_hma03")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.775694, 0.631109, 0, -0.631109, 0.775694, 100, 0, 0)
@@ -18,14 +57,43 @@ shadow_enabled = true
 shadow_bias = 0.01
 shadow_normal_bias = 1.0
 
-[node name="Ball2" parent="." instance=ExtResource("2_1oxx4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.372795, 0.119436, 0)
-_texture = ExtResource("3_j2ck1")
-
-[node name="PlaySystem" type="Node3D" parent="." node_paths=PackedStringArray("_cue_ball")]
+[node name="PlaySystem" type="Node3D" parent="." node_paths=PackedStringArray("_cue_ball", "_aim_container", "_cue_stick", "_stick_animation_player")]
 script = ExtResource("4_vcjpw")
 _cue_ball = NodePath("CueBall")
+_aim_container = NodePath("AimContainer")
+_cue_stick = NodePath("AimContainer/CueStickContainer/CueStick")
+_stick_animation_player = NodePath("AnimationPlayer")
+_shot_power_max = 10.0
 metadata/_edit_lock_ = true
 
 [node name="CueBall" parent="PlaySystem" instance=ExtResource("2_1oxx4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18166, 0.119436, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.030827, 0)
+
+[node name="AimContainer" type="Node3D" parent="PlaySystem"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0259661, 0)
+
+[node name="AimCam" type="Camera3D" parent="PlaySystem/AimContainer"]
+transform = Transform3D(1, 0, 0, 0, 0.917755, 0.397148, 0, -0.397148, 0.917755, 0, 0.431684, 0.877911)
+current = true
+fov = 40.0
+
+[node name="CueStickContainer" type="Node3D" parent="PlaySystem/AimContainer"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0)
+
+[node name="CueStick" type="Node3D" parent="PlaySystem/AimContainer/CueStickContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 8.9407e-08, 0, -8.9407e-08, 1, 0, 0, 0.75)
+metadata/_edit_group_ = true
+
+[node name="CueStickMesh" type="MeshInstance3D" parent="PlaySystem/AimContainer/CueStickContainer/CueStick"]
+transform = Transform3D(0.999945, 0.0104718, -4.4996e-10, 0.000521218, -0.0497708, 0.998761, 0.0104588, -0.998706, -0.0497736, 0.005, 0, 0)
+mesh = ExtResource("5_7r1sn")
+skeleton = NodePath("../../../../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlaySystem"]
+libraries = {
+"": SubResource("AnimationLibrary_k6sl2")
+}
+
+[node name="BallRack" type="Node3D" parent="."]
+script = ExtResource("7_m6m0y")
+_ball_tscn = ExtResource("2_1oxx4")

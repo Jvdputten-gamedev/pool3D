@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyqievi3n2a5x"]
+
+[ext_resource type="PackedScene" uid="uid://cm41w77m7vlqc" path="res://assets/Billiard Table.blend" id="1_1y4qb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o60r6"]
+size = Vector3(2.1566, 0.001, 1.08223)
+
+[node name="Billiard Table" instance=ExtResource("1_1y4qb")]
+
+[node name="Billiard Table_Fabric" parent="." index="0"]
+transform = Transform3D(1.34099, 0, 0, 0, 1.34099, 0, 0, 0, 1.34099, 0, 0, 0)
+
+[node name="Billiard Table_Walls" parent="." index="1"]
+transform = Transform3D(1.34099, 0, 0, 0, 1.34099, 0, 0, 0, 1.34099, 0, 0, 0)
+
+[node name="Billiard Table_Pocket Gold" parent="." index="2"]
+transform = Transform3D(1.34099, 0, 0, 0, 1.34099, 0, 0, 0, 1.34099, 0, 0, 0)
+
+[node name="Billiard Table_Wood" parent="." index="3"]
+transform = Transform3D(1.34099, 0, 0, 0, 1.34099, 0, 0, 0, 1.34099, 0, 0, 0)
+
+[node name="Billiard Table_Golds" parent="." index="4"]
+transform = Transform3D(1.34099, 0, 0, 0, 1.34099, 0, 0, 0, 1.34099, 0, 0, 0)
+
+[node name="Billiard Table_Legs" parent="." index="5"]
+transform = Transform3D(1.34099, 0, 0, 0, 1.34099, 0, 0, 0, 1.34099, 0, 0, 0)
+
+[node name="Billiard Table_Plastic Grids" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="White" parent="." index="7"]
+visible = false
+
+[node name="1 Ball" parent="." index="8"]
+visible = false
+
+[node name="Cue 1" parent="." index="9"]
+visible = false
+
+[node name="SurfaceBody" type="StaticBody3D" parent="." index="10"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceBody" index="0"]
+shape = SubResource("BoxShape3D_o60r6")

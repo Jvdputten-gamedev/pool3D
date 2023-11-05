@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cmw5ho0rhkoe5"]
+
+[ext_resource type="PackedScene" uid="uid://dyqievi3n2a5x" path="res://scenes/billiard_table.tscn" id="1_av5cg"]
+[ext_resource type="PackedScene" uid="uid://chb8iwsf5qhuk" path="res://scenes/ball.tscn" id="2_1oxx4"]
+[ext_resource type="Texture2D" uid="uid://byxxs3ohmnwwb" path="res://assets/textures/16073.jpg" id="3_j2ck1"]
+[ext_resource type="Script" path="res://scripts/play_system.gd" id="4_vcjpw"]
+
+[node name="Main" type="Node3D"]
+
+[node name="Billiard Table" parent="." instance=ExtResource("1_av5cg")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.341627, 0.939836, 0, -0.939836, 0.341627, 0, 1.03972, 0.497287)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.775694, 0.631109, 0, -0.631109, 0.775694, 100, 0, 0)
+shadow_enabled = true
+shadow_bias = 0.01
+shadow_normal_bias = 1.0
+
+[node name="Ball2" parent="." instance=ExtResource("2_1oxx4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.372795, 0.119436, 0)
+_texture = ExtResource("3_j2ck1")
+
+[node name="PlaySystem" type="Node3D" parent="." node_paths=PackedStringArray("_cue_ball")]
+script = ExtResource("4_vcjpw")
+_cue_ball = NodePath("CueBall")
+metadata/_edit_lock_ = true
+
+[node name="CueBall" parent="PlaySystem" instance=ExtResource("2_1oxx4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18166, 0.119436, 0)

@@ -4,6 +4,8 @@ extends Node3D
 @export var _aim_container: Node3D
 @export var _cue_stick: Node3D
 @export var _stick_animation_player: AnimationPlayer
+@export var _aim_cam: Camera3D
+@export var _game_state: GameState
 
 @export var _stick_min_z: float = 0.75
 @export var _stick_max_z: float = 1.25
@@ -13,9 +15,10 @@ extends Node3D
 
 
 var _shot_percent: float = 0
-var _play_state: Enums.PlayState = Enums.PlayState.AIMING
+#var _play_state: Enums.PlayState = Enums.PlayState.AIMING
 
 func _ready():
+	GameEvents.shot_completed.connect(_setup_next_shot)
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_cue_ball.position = BilliardTable.HEAD_SPOT
 
@@ -23,6 +26,8 @@ func _process(_delta):
 	
 	_handle_shot_input()
 	_aim_container.position = _cue_ball.position
+
+	_process_cheat_mode()
 
 	
 func _input(event):
@@ -34,13 +39,10 @@ func _input(event):
 		_shot_percent = clamp (_shot_percent, 0, 1)
 		_cue_stick.position.z = lerp(_stick_min_z, _stick_max_z, _shot_percent)
 
-		# _cue_stick.position.z += mouse_motion.relative.y * _stick_z_sens
-		# _cue_stick.position.z = clamp(_cue_stick.position.z, _stick_min_z, _stick_max_z)
-
 
 func _handle_shot_input():
 	if (Input.is_action_just_pressed("shoot") and 
-			_play_state == Enums.PlayState.AIMING):
+			_game_state.current_play_state == Enums.PlayState.AIMING):
 		_stick_animation_player.play("shoot_stick")
 		
 		
@@ -52,5 +54,18 @@ func _strike_ball():
 
 	_cue_stick.visible = false
 
-	_play_state = Enums.PlayState.BALLS_IN_PLAY
+	_game_state.current_play_state = Enums.PlayState.BALLS_IN_PLAY
 	GameEvents.cue_ball_hit.emit()
+
+func _setup_next_shot():
+	_cue_stick.visible = true
+	_aim_cam.make_current()
+
+func _process_cheat_mode():
+	_cue_ball.apply_central_force(Vector3(
+		Input.get_action_strength("ui_right")
+			- Input.get_action_strength("ui_left")
+		, 0
+		, Input.get_action_strength("ui_down")
+			- Input.get_action_strength("ui_up")
+	) * 8)

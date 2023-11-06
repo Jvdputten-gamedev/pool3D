@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://d15w6jylqu88u"]
+
+[ext_resource type="Script" path="res://scripts/pocket.gd" id="1_lumh3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f75kn"]
+size = Vector3(1, 0.624446, 0.978256)
+
+[node name="Pocket" type="Area3D"]
+script = ExtResource("1_lumh3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_f75kn")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

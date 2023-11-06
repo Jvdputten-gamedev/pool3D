@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dyqievi3n2a5x"]
+[gd_scene load_steps=8 format=3 uid="uid://dyqievi3n2a5x"]
 
 [ext_resource type="PackedScene" uid="uid://cm41w77m7vlqc" path="res://assets/Billiard Table.blend" id="1_1y4qb"]
 [ext_resource type="Script" path="res://scripts/billiard_table.gd" id="2_em4a7"]
+[ext_resource type="PackedScene" uid="uid://d15w6jylqu88u" path="res://scenes/pocket.tscn" id="3_u73qr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_o60r6"]
 size = Vector3(2.1566, 0.001, 1.08223)
@@ -131,3 +132,21 @@ shape = SubResource("BoxShape3D_u0hvm")
 
 [node name="Node3D" type="Node3D" parent="." index="12"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.532996, 0, 0)
+
+[node name="Pocket" parent="." index="13" instance=ExtResource("3_u73qr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4795, -0.358972, 0.876816)
+
+[node name="Pocket2" parent="." index="14" instance=ExtResource("3_u73qr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00686228, -0.358972, 0.876816)
+
+[node name="Pocket3" parent="." index="15" instance=ExtResource("3_u73qr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47912, -0.358972, 0.876816)
+
+[node name="Pocket4" parent="." index="16" instance=ExtResource("3_u73qr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47912, -0.358972, -0.92505)
+
+[node name="Pocket5" parent="." index="17" instance=ExtResource("3_u73qr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00241351, -0.358972, -0.92505)
+
+[node name="Pocket6" parent="." index="18" instance=ExtResource("3_u73qr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.51954, -0.358972, -0.92505)

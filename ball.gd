@@ -1,6 +1,7 @@
 extends RigidBody3D
 class_name Ball
 
+static var num_balls_moving: int = 0
 
 const BALL_RADIUS: float = 0.027
 const BALL_DIAMETER: float = BALL_RADIUS * 2
@@ -11,6 +12,12 @@ var _ball_num: int = 0
 var ball_type: Enums.BallType
 
 func _ready():
+	GameEvents.ball_potted.connect(_on_ball_potted)
+
+	if not self.sleeping:
+		Ball.num_balls_moving += 1
+
+
 	_apply_new_material()
 
 func _integrate_forces(_state):
@@ -36,9 +43,32 @@ func setup_ball(ball_num: int, ball_x: float, ball_z: float):
 
 	_apply_new_material()
 
+func is_object_ball() -> bool:
+	return (self.ball_type == Enums.BallType.SOLIDS
+			or self.ball_type == Enums.BallType.STRIPES)
+
+
 func _apply_new_material():
 	var new_material = StandardMaterial3D.new()
 	new_material.albedo_texture = _texture
 	$BallMesh.material_override = new_material
 
 
+
+
+func _on_sleeping_state_changed():
+	if self.sleeping:
+		Ball.num_balls_moving -= 1
+	else:
+		Ball.num_balls_moving += 1
+
+	if Ball.num_balls_moving == 0:
+		GameEvents.all_balls_stopped.emit()
+
+
+func _on_ball_potted(ball, pocket):
+	if (ball == self):
+		self.freeze = true
+		self.sleeping = true
+		self.sleeping_state_changed.emit()
+		self.position = Vector3(0, -0.5, 0)

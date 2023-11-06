@@ -20,3 +20,5 @@ skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_forg5")
+
+[connection signal="sleeping_state_changed" from="." to="." method="_on_sleeping_state_changed"]

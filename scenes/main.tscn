@@ -1,11 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://cmw5ho0rhkoe5"]
+[gd_scene load_steps=13 format=3 uid="uid://cmw5ho0rhkoe5"]
 
 [ext_resource type="PackedScene" uid="uid://dyqievi3n2a5x" path="res://scenes/billiard_table.tscn" id="1_av5cg"]
 [ext_resource type="PackedScene" uid="uid://chb8iwsf5qhuk" path="res://scenes/ball.tscn" id="2_1oxx4"]
 [ext_resource type="Script" path="res://scripts/overhead_cam.gd" id="2_hma03"]
 [ext_resource type="Script" path="res://scripts/play_system.gd" id="4_vcjpw"]
 [ext_resource type="ArrayMesh" uid="uid://qydps34by717" path="res://assets/cue_stick.res" id="5_7r1sn"]
+[ext_resource type="Script" path="res://scripts/rule_processor.gd" id="7_dcu2j"]
 [ext_resource type="Script" path="res://scripts/ball_rack.gd" id="7_m6m0y"]
+[ext_resource type="Resource" uid="uid://bb87n8noxs6m0" path="res://resources/release_game_state.tres" id="8_icwek"]
+[ext_resource type="Script" path="res://scripts/HUD.gd" id="9_r7me0"]
+[ext_resource type="LabelSettings" uid="uid://dweo5sor463s" path="res://resources/hub_font_settings.tres" id="10_oav3d"]
 
 [sub_resource type="Animation" id="Animation_k6km8"]
 resource_name = "shoot_stick"
@@ -57,12 +61,14 @@ shadow_enabled = true
 shadow_bias = 0.01
 shadow_normal_bias = 1.0
 
-[node name="PlaySystem" type="Node3D" parent="." node_paths=PackedStringArray("_cue_ball", "_aim_container", "_cue_stick", "_stick_animation_player")]
+[node name="PlaySystem" type="Node3D" parent="." node_paths=PackedStringArray("_cue_ball", "_aim_container", "_cue_stick", "_stick_animation_player", "_aim_cam")]
 script = ExtResource("4_vcjpw")
 _cue_ball = NodePath("CueBall")
 _aim_container = NodePath("AimContainer")
 _cue_stick = NodePath("AimContainer/CueStickContainer/CueStick")
 _stick_animation_player = NodePath("AnimationPlayer")
+_aim_cam = NodePath("AimContainer/AimCam")
+_game_state = ExtResource("8_icwek")
 _shot_power_max = 10.0
 metadata/_edit_lock_ = true
 
@@ -97,3 +103,31 @@ libraries = {
 [node name="BallRack" type="Node3D" parent="."]
 script = ExtResource("7_m6m0y")
 _ball_tscn = ExtResource("2_1oxx4")
+
+[node name="RuleProcessor" type="Node" parent="."]
+script = ExtResource("7_dcu2j")
+_game_state = ExtResource("8_icwek")
+
+[node name="HUD" type="MarginContainer" parent="." node_paths=PackedStringArray("_player_label", "_instructions_label")]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+script = ExtResource("9_r7me0")
+_player_label = NodePath("PlayerLabel")
+_instructions_label = NodePath("InstructionsLabel")
+_game_state = ExtResource("8_icwek")
+
+[node name="PlayerLabel" type="Label" parent="HUD"]
+layout_mode = 2
+text = "Player 1"
+label_settings = ExtResource("10_oav3d")
+
+[node name="InstructionsLabel" type="Label" parent="HUD"]
+layout_mode = 2
+text = "Aim and shoot"
+label_settings = ExtResource("10_oav3d")
+horizontal_alignment = 1

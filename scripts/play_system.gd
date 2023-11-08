@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var _cue_ball: RigidBody3D
+@export var _cue_ball: Ball
 @export var _aim_container: Node3D
 @export var _cue_stick: Node3D
 @export var _stick_animation_player: AnimationPlayer
@@ -60,6 +60,12 @@ func _strike_ball():
 func _setup_next_shot():
 	_cue_stick.visible = true
 	_aim_cam.make_current()
+
+	if _game_state.current_play_state == Enums.PlaysState.BALL_IN_HAND:
+		# for now, complete BALL_IN_HAND instantly
+		_cue_ball.position = BilliardTable.HEAD_SPOT
+		_cue_ball.set_freeze_state(false)
+		_game_state.current_play_state = Enums.PlayState.AIMING
 
 func _process_cheat_mode():
 	_cue_ball.apply_central_force(Vector3(

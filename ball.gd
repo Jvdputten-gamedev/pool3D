@@ -47,6 +47,10 @@ func is_object_ball() -> bool:
 	return (self.ball_type == Enums.BallType.SOLIDS
 			or self.ball_type == Enums.BallType.STRIPES)
 
+func set_freeze_state(new_freeze_state: bool):
+	self.freeze = new_freeze_state
+	self.sleeping = new_freeze_state
+	self.sleeping_state_changed.emit()
 
 func _apply_new_material():
 	var new_material = StandardMaterial3D.new()
@@ -68,7 +72,5 @@ func _on_sleeping_state_changed():
 
 func _on_ball_potted(ball, pocket):
 	if (ball == self):
-		self.freeze = true
-		self.sleeping = true
-		self.sleeping_state_changed.emit()
+		self.set_freeze_state(true)
 		self.position = Vector3(0, -0.5, 0)

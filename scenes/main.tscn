@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cmw5ho0rhkoe5"]
+[gd_scene load_steps=15 format=3 uid="uid://cmw5ho0rhkoe5"]
 
 [ext_resource type="PackedScene" uid="uid://dyqievi3n2a5x" path="res://scenes/billiard_table.tscn" id="1_av5cg"]
 [ext_resource type="PackedScene" uid="uid://chb8iwsf5qhuk" path="res://scenes/ball.tscn" id="2_1oxx4"]
@@ -10,6 +10,8 @@
 [ext_resource type="Resource" uid="uid://bb87n8noxs6m0" path="res://resources/release_game_state.tres" id="8_icwek"]
 [ext_resource type="Script" path="res://scripts/HUD.gd" id="9_r7me0"]
 [ext_resource type="LabelSettings" uid="uid://dweo5sor463s" path="res://resources/hub_font_settings.tres" id="10_oav3d"]
+[ext_resource type="LabelSettings" uid="uid://boiepyecuwu1k" path="res://resources/win_font_settings.tres" id="11_jpmju"]
+[ext_resource type="Script" path="res://scripts/game_over_label.gd" id="12_3lian"]
 
 [sub_resource type="Animation" id="Animation_k6km8"]
 resource_name = "shoot_stick"
@@ -131,3 +133,15 @@ layout_mode = 2
 text = "Aim and shoot"
 label_settings = ExtResource("10_oav3d")
 horizontal_alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Player X wins!"
+label_settings = ExtResource("11_jpmju")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("12_3lian")

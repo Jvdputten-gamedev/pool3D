@@ -8,18 +8,50 @@ func _ready():
 	GameEvents.ball_potted.connect(_on_ball_potted)
 
 func _process_rules():
+	var cp_id = _game_state.current_player_id
+	var op_id = _get_other_player_id(cp_id)
+	var player_keeps_turn: bool = false 
+	var foul_committed: bool = false
+	var winning_player_id: int = -1
 
 	for occurrence in _occurrences_during_shot:
 		
 		if occurrence is PocketOccurrence:
 			var ball: Ball = occurrence.ball
+
 			if ball.is_object_ball():
 				_check_and_set_ball_suit_for_players(ball)
-				print("Player_suits: ", _game_state.ball_suit_by_player_id)
 
-	_game_state.current_play_state = Enums.PlayState.AIMING
-	_occurrences_during_shot.clear()
-	GameEvents.shot_completed.emit()
+				if ball.ball_type == _game_state.ball_suit_by_player_id[cp_id]:
+					player_keeps_turn = true
+					_game_state.balls_remaining_by_player_id[cp_id] -= 1
+				else:
+					_game_state.balls_remaining_by_player_id[op_id] -= 1
+
+			if ball.ball_type == Enums.BallType.CUE_BALL:
+				foul_committed = true
+
+			if ball.ball_type == Enums.BallType.EIGHT_BALL:
+				if _game_state.balls_remaining_by_player_id[cp_id] <= 0:
+					winning_player_id = cp_id
+				else:
+					winning_player_id = op_id
+			pass
+
+	
+	if player_keeps_turn == false or foul_committed == true:
+		_game_state.current_player_id = op_id
+
+	if winning_player_id > -1:
+		GameEvents.game_ended.emit(winning_player_id)
+	else:
+		if foul_committed:
+			_game_state.current_play_state = Enums.PlayState.BALL_IN_HAND
+		else:
+			_game_state.current_play_state = Enums.PlayState.AIMING
+		
+		_occurrences_during_shot.clear()
+		GameEvents.shot_completed.emit()
 
 
 func _check_and_set_ball_suit_for_players(ball: Ball):
@@ -47,7 +79,7 @@ func _on_ball_potted(ball: Ball, pocket: Pocket):
 
 func _on_all_balls_stopped():
 	if _game_state.current_play_state == Enums.PlayState.BALLS_IN_PLAY:
-		_process_rules()
+		_process_rules.call_deferred()
 
 
 ## Occurrence classes

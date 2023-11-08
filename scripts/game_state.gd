@@ -10,6 +10,8 @@ class_name GameState
 
 @export var ball_suit_by_player_id: Array[Enums.BallType]
 
+@export var balls_remaining_by_player_id: Array[int]
+
 
 
 

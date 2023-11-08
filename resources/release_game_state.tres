@@ -7,3 +7,4 @@ script = ExtResource("1_6icpn")
 current_player_id = 0
 current_play_state = 0
 ball_suit_by_player_id = Array[int]([4, 4])
+balls_remaining_by_player_id = Array[int]([7, 7])
